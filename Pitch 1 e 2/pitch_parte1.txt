@@ -1,0 +1,25 @@
+import random
+
+def password():
+  if (num_caract < 0):
+    return "Erro: número negativo"
+  elif (num_caract == 0):
+    return "Erro: Tem que ter pelo menos 1 caracter."
+  else:
+    passwd = ""
+    while len(passwd) != num_caract:
+      passwd = passwd + random.choice(c)
+    if len(passwd) == num_caract:
+      return "Password: %s" % passwd
+      
+
+num_caract = int(input("Número de caracteres: "))
+so_numero = int(input("Deseja só números(1-S ou 2-N):"))
+
+c = ''
+if (so_numero == 1):
+  c = "1234567890"
+  print (password())
+else:
+  c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+  print (password())
