@@ -1,4 +1,3 @@
-#! /usr/local/bin/python3
 #! python3 (Windows)
 
 
@@ -7,8 +6,11 @@ import os, csv, pyperclip, random
 
 def carregarCredenciais():
 	credenciais = {} #Dicionário
-	for login, senha in csv.reader(open("credenciais.csv")):
-		credenciais[login] = senha
+	with open("credenciais.csv") as arq_csv:
+                leitor_csv = csv.reader(arq_csv)
+                for linha in leitor_csv:
+                        if len(linha) == 2:
+                                credenciais[linha[0]] = linha[1]
 	return credenciais
 
 
@@ -80,19 +82,59 @@ def criarCredencial():
 	print("Sua nova credencial foi adicionada ao chaveiro")
 
 
+def removerCredencial():
+        if not os.path.exists(os.path.join(os.getcwd(), "credenciais.csv")):
+                print("Seu chaveiro está vazio!")
+                return
+        credenciais = carregarCredenciais() #Carregar as credenciais existentes
+
+        print("Seu chaveiro possui %d credenciais:" % len(credenciais))
+        listaCredenciais = list(credenciais.keys())
+        if len(listaCredenciais) == 0:
+                return
+        for i, login in enumerate(listaCredenciais):
+                print("%d) " % (i+1) + login)
+        op = int(input("Digite o número associado à credencial a ser removida: "))
+        if op <= 0 or op > len(listaCredenciais):
+                print("Opção inválida!")
+                return
+        del credenciais[listaCredenciais[op-1]] #Remover a chave do dicionário
+
+        # Rearmazenar arquivo csv
+        f = csv.writer(open("credenciais.csv", "w+"))
+        for login, senha in credenciais.items():
+                f.writerow([login, senha])
+        print("A credencial \"" + listaCredenciais[op-1] + "\" foi apagada")
+
+
 # Menu de opções iniciais
 while True:
-	op = int(input("""
-Digite o número associado à sua opção:
+        os.system('cls')
+        op = int(input("""Digite o número associado à sua opção:
 1) Consultar senha
 2) Armazenar nova credencial
+3) Remover credencial
 0) Sair
 """))
-	if op == 0:
-		exit()
-	elif op == 1:
-		consultarSenha()
-	elif op == 2:
-		criarCredencial()
-	else:
-		print("Opção inválida!")
+        if op == 0:
+                os.system('cls')
+                exit()
+        elif op == 1:
+                os.system('cls')
+                consultarSenha()
+                os.system('pause')
+                os.system('cls')
+        elif op == 2:
+                os.system('cls')
+                criarCredencial()
+                os.system('pause')
+                os.system('cls')
+        elif op == 3:
+                os.system('cls')
+                removerCredencial()
+                os.system('pause')
+                os.system('cls')
+        else:
+                print("Opção inválida!")
+                os.system('pause')
+                os.system('cls')
